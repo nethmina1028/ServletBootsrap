@@ -97,4 +97,59 @@ public class HmsDao {
 		
 	}
 
+	public Patient selectOldPatient(int id) {
+		Connection con = dbConnection();
+		
+		Patient oldPatient = null;
+		
+		try {
+			
+			String sql = "SELECT * FROM patient WHERE id=?";
+			PreparedStatement ps = con.prepareStatement(sql);
+			ps.setInt(1,id);
+			
+			System.out.println(ps);
+			
+			ResultSet rs = ps.executeQuery();
+			
+			while(rs.next()) {
+				String name = rs.getString("name");
+				String email=rs.getString("email");
+				int age=rs.getInt("age");
+				String city = rs.getString("city");
+				String gender = rs.getString("gender");
+				
+				oldPatient = new Patient(id,name,email,age,city,gender);
+				
+			}
+		}catch(Exception e) {
+			
+		}
+		
+		return oldPatient;
+	}
+
+	public boolean updateOldPatient(Patient updatedPatient) {
+		Connection con = dbConnection();
+		boolean update = false;
+		try {
+			String sql = "UPDATE patient SET name=?,email=?,age=?,city=?,gender=? WHERE id=?";
+			PreparedStatement ps = con.prepareStatement(sql);
+			
+			
+			ps.setString(1,updatedPatient.getName());
+			ps.setString(2,updatedPatient.getEmail());
+			ps.setInt(3, updatedPatient.getAge());
+			ps.setString(4,updatedPatient.getCity());
+			ps.setString(5,updatedPatient.getGender());
+			
+			ps.setInt(6,updatedPatient.getId());
+			update = ps.executeUpdate() > 0;
+			
+		}catch(Exception e) {
+			
+		}
+		return update;
+	}
+
 }

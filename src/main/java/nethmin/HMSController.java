@@ -34,10 +34,47 @@ public class HMSController extends HttpServlet{
 			   insertPatient(req,res);
 			   break;
 			   
+		   case "/update":
+			   showUpdateForm(req,res);
+			   break;
+			   
+		   case "/updatePatient":
+			   updatePatient(req,res);
+			   break;
+			   
 			   
 		   }
 	}
  
+	private void updatePatient(HttpServletRequest req, HttpServletResponse res) throws IOException {
+		int id =Integer.parseInt(req.getParameter("uid"));
+		String name = req.getParameter("uname");
+		String email =req.getParameter("uemail");
+		int age =Integer.parseInt(req.getParameter("uage"));
+		String city = req.getParameter("ucity");
+		String gender =req.getParameter("ugender");
+		
+		Patient updatedPatient = new Patient(id,name,email,age,city,gender);
+		boolean check=dao.updateOldPatient(updatedPatient);
+		
+		if(check) {
+			res.sendRedirect("dashboard");
+		}else {
+			System.out.println("Failed to update");
+		}
+	}
+
+	private void showUpdateForm(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+		 int id=Integer.parseInt(req.getParameter("id"));
+		 
+		 Patient oldPatient =dao.selectOldPatient(id);
+		 
+		 RequestDispatcher rd = req.getRequestDispatcher("update.jsp");
+		 req.setAttribute("pt",oldPatient);
+		 rd.forward(req, res);
+		 
+	}
+
 	private void insertPatient(HttpServletRequest req, HttpServletResponse res) throws IOException {
 		   String name= req.getParameter("uname");
 		   String email= req.getParameter("uemail");
