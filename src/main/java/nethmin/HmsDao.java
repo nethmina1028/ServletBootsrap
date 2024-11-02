@@ -74,4 +74,27 @@ public class HmsDao {
 		return ptList;
 	}
 
+	public void addNewPatient(Patient pt) {
+		
+		try {
+			Connection con = dbConnection();
+			String sql="INSERT INTO patient(name,email,age,city,gender) VALUES(?,?,?,?,?)";
+			
+			PreparedStatement ps = con.prepareStatement(sql);
+			ps.setString(1, pt.getName());
+			ps.setString(2,pt.getEmail());
+			ps.setInt(3, pt.getAge());
+			ps.setString(4,pt.getCity());
+			ps.setString(5, pt.getGender());
+			
+			System.out.println(ps);
+			
+			ps.executeUpdate();
+			
+		}catch(Exception e) {
+			
+		}
+		
+	}
+
 }

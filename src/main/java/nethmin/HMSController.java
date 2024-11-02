@@ -29,9 +29,30 @@ public class HMSController extends HttpServlet{
 		   case "/dashboard":
 			   showDashbaord(req,res);
 			   break;
+			   
+		   case "/insertPatient":
+			   insertPatient(req,res);
+			   break;
+			   
+			   
 		   }
 	}
  
+	private void insertPatient(HttpServletRequest req, HttpServletResponse res) throws IOException {
+		   String name= req.getParameter("uname");
+		   String email= req.getParameter("uemail");
+		   int age=Integer.parseInt(req.getParameter("uage"));
+		   String city= req.getParameter("ucity");
+		   String gender= req.getParameter("ugender");
+		   
+		   Patient pt = new Patient(name,email,age,city,gender);
+		
+		   dao.addNewPatient(pt);
+		   
+		   System.out.println("Patient added");
+		   res.sendRedirect("dashboard");
+	}
+
 	private void showDashbaord(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		
 		  List<Patient> ptList = new ArrayList<>();
