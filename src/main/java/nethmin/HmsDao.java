@@ -152,4 +152,25 @@ public class HmsDao {
 		return update;
 	}
 
+	
+	
+	
+	public void deletePatient(int id) {
+		Connection con = dbConnection();
+		
+		try {
+			String query ="DELETE FROM patient WHERE id=?";
+			PreparedStatement ps=con.prepareStatement(query);
+			
+			ps.setInt(1, id);
+			ps.executeUpdate();
+			
+			System.out.print("Delete Success");
+			
+		}catch(Exception e) {
+			
+		}
+		
+	}
+
 }

@@ -10,6 +10,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
   
   @WebServlet("/")
 public class HMSController extends HttpServlet{
@@ -42,10 +43,41 @@ public class HMSController extends HttpServlet{
 			   updatePatient(req,res);
 			   break;
 			   
+		   case "/delete":
+			    deletePatient(req,res);
+			    break;
+		  
+		   case "/logout":
+			   logoutDoctor(req,res);
+			   break;
+			 
+		 
+		  default:
+			  showDashbaord(req,res);
+		   break;
 			   
 		   }
 	}
  
+	private void logoutDoctor(HttpServletRequest req, HttpServletResponse res) throws IOException  {
+		
+		  HttpSession s = req.getSession();
+		  s.removeAttribute("doctor");
+		  s.invalidate();
+		  
+		  res.sendRedirect("index.jsp");
+	}
+
+	private void deletePatient(HttpServletRequest req, HttpServletResponse res) throws IOException {
+		int id = Integer.parseInt(req.getParameter("id"));
+		
+		dao.deletePatient(id);
+		
+		System.out.print("User deleted");
+		res.sendRedirect("dashboard");
+		
+	}
+
 	private void updatePatient(HttpServletRequest req, HttpServletResponse res) throws IOException {
 		int id =Integer.parseInt(req.getParameter("uid"));
 		String name = req.getParameter("uname");
@@ -107,8 +139,16 @@ public class HMSController extends HttpServlet{
 		 System.out.println(un);
 		 
 		 if(dao.doctorCheck(un,up)) {
+			 
+			 //Session
+			 
+			 HttpSession session= req.getSession();
+			 session.setAttribute("doctor", un);
+			 
 			System.out.println("login sucess");
 			res.sendRedirect("dashboard");
+			
+			
 		 }else {
 			 System.out.println("Wrong credential");
 			 res.sendRedirect("login.jsp");
